@@ -2,7 +2,7 @@
 //
 // Foundation/NSPrivate.hpp
 //
-// Copyright 2020-2022 Apple Inc.
+// Copyright 2020-2023 Apple Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@
 #define _NS_PRIVATE_VISIBILITY __attribute__((visibility("hidden")))
 #else
 #define _NS_PRIVATE_VISIBILITY __attribute__((visibility("default")))
-#endif //METALCPP_SYMBOL_VISIBILITY_HIDDEN
+#endif // METALCPP_SYMBOL_VISIBILITY_HIDDEN
 
 #define _NS_PRIVATE_IMPORT __attribute__((weak_import))
 
@@ -73,10 +73,9 @@ namespace Private
 {
     namespace Class
     {
-        // Patch out, defined in single header
 
         _NS_PRIVATE_DEF_CLS(NSArray);
-        _NS_PRIVATE_DEF_CLS(NSAutoreleasePool); 
+        _NS_PRIVATE_DEF_CLS(NSAutoreleasePool);
         _NS_PRIVATE_DEF_CLS(NSBundle);
         _NS_PRIVATE_DEF_CLS(NSCondition);
         _NS_PRIVATE_DEF_CLS(NSDate);
@@ -84,12 +83,12 @@ namespace Private
         _NS_PRIVATE_DEF_CLS(NSError);
         _NS_PRIVATE_DEF_CLS(NSNotificationCenter);
         _NS_PRIVATE_DEF_CLS(NSNumber);
-        _NS_PRIVATE_DEF_CLS(NSObject); 
+        _NS_PRIVATE_DEF_CLS(NSObject);
         _NS_PRIVATE_DEF_CLS(NSProcessInfo);
-        _NS_PRIVATE_DEF_CLS(NSSet); 
-        _NS_PRIVATE_DEF_CLS(NSString); 
-        _NS_PRIVATE_DEF_CLS(NSURL); 
-         _NS_PRIVATE_DEF_CLS(NSValue); 
+        _NS_PRIVATE_DEF_CLS(NSSet);
+        _NS_PRIVATE_DEF_CLS(NSString);
+        _NS_PRIVATE_DEF_CLS(NSURL);
+        _NS_PRIVATE_DEF_CLS(NSValue);
 
     } // Class
 } // Private
@@ -116,7 +115,6 @@ namespace Private
 {
     namespace Selector
     {
-        // Patch out, defined in single header
 
         _NS_PRIVATE_DEF_SEL(addObject_,
             "addObject:");
@@ -166,6 +164,8 @@ namespace Private
             "bundleWithPath:");
         _NS_PRIVATE_DEF_SEL(bundleWithURL_,
             "bundleWithURL:");
+        _NS_PRIVATE_DEF_SEL(caseInsensitiveCompare_,
+            "caseInsensitiveCompare:");
         _NS_PRIVATE_DEF_SEL(characterAtIndex_,
             "characterAtIndex:");
         _NS_PRIVATE_DEF_SEL(charValue,
