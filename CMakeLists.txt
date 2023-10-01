@@ -28,6 +28,7 @@ file(GLOB SOURCE_FILES
   src/*.cpp
   src/x3d/*.cpp
   src/x3d/engine/*.cpp
+  src/x3d/mesh/*.cpp
  )
 
 add_executable(metal_dlss
