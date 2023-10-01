@@ -9,7 +9,6 @@
 namespace x3d {
 class AppDelegate : public NS::ApplicationDelegate {
 public:
-  ~AppDelegate();
 
   NS::Menu* createMenuBar();
   virtual void
@@ -18,11 +17,10 @@ public:
   applicationDidFinishLaunching(NS::Notification *pNotification) override;
   virtual bool applicationShouldTerminateAfterLastWindowClosed(
       NS::Application *pSender) override;
-
+  void draw();
 private:
-  MTL::Device* pDevice;
-  MTK::View* pView;
-  NS::Window* pWindow;
+  NS::SharedPtr<MTK::View> pView;
+  NS::SharedPtr<NS::Window> pWindow;
   std::unique_ptr<engine::Renderer> pRenderer;
 };
 } // namespace x3d

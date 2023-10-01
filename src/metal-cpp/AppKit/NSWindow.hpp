@@ -43,7 +43,7 @@ namespace NS
 			void				setContentView( const View* pContentView );
 			void				makeKeyAndOrderFront( const Object* pSender );
 			void				setTitle( const String* pTitle );
-
+      
 			void				close();
 	};
 

@@ -1,12 +1,11 @@
 #include "Delegate.hpp"
+#include "Metal.hpp"
 #include "engine/Renderer.hpp"
 #include <iostream>
+
+#include <chrono>
+#include <thread>
 using namespace x3d;
-AppDelegate::~AppDelegate() {
-  pView->release();
-  pWindow->release();
-  pDevice->release();
-}
 
 NS::Menu *AppDelegate::createMenuBar() {
   std::cout << "[AppDelegate::createMenuBar] create bar" << std::endl;
@@ -74,22 +73,24 @@ void AppDelegate::applicationDidFinishLaunching(
     NS::Notification *pNotification) {
   std::cout << "[AppDelegate::applicationDidFinishLaunching] launch finish"
             << std::endl;
-  CGRect frame = (CGRect){{100.0, 100.0}, {512.0, 512.0}};
+  CGRect frame = (CGRect){{0.0, 0.0}, {1512.0, 920.0}};
 
-  pWindow = NS::Window::alloc()->init(
+  pWindow = NS::TransferPtr(NS::Window::alloc()->init(
       frame, NS::WindowStyleMaskClosable | NS::WindowStyleMaskTitled,
-      NS::BackingStoreBuffered, false);
+      NS::BackingStoreBuffered, false));
 
-  pDevice = MTL::CreateSystemDefaultDevice();
+  auto pDevice = MTL::CreateSystemDefaultDevice();
 
-  pView = MTK::View::alloc()->init(frame, pDevice);
+  pView = NS::TransferPtr( MTK::View::alloc()->init(frame, pDevice));
   pView->setColorPixelFormat(MTL::PixelFormat::PixelFormatBGRA8Unorm_sRGB);
   pView->setClearColor(MTL::ClearColor::Make(1.0, 0.0, 0.0, 1.0));
+  pView->setEnableSetNeedsDisplay(false);
+  pView->setPaused(true);
 
   pRenderer = std::make_unique<engine::Renderer>(pDevice);
   pView->setDelegate(pRenderer.get());
 
-  pWindow->setContentView(pView);
+  pWindow->setContentView(pView.get());
   pWindow->setTitle(
       NS::String::string("metal_dlss", NS::StringEncoding::UTF8StringEncoding));
 
@@ -107,3 +108,5 @@ bool AppDelegate::applicationShouldTerminateAfterLastWindowClosed(
             << std::endl;
   return true;
 }
+
+void AppDelegate::draw() { pView->draw(); }
