@@ -1,6 +1,7 @@
 #include "Delegate.hpp"
 #include "Metal.hpp"
 #include "engine/Renderer.hpp"
+#include "mesh/BasicMeshes.hpp"
 #include <iostream>
 
 #include <chrono>
@@ -81,7 +82,7 @@ void AppDelegate::applicationDidFinishLaunching(
 
   auto pDevice = MTL::CreateSystemDefaultDevice();
 
-  pView = NS::TransferPtr( MTK::View::alloc()->init(frame, pDevice));
+  pView = NS::TransferPtr(MTK::View::alloc()->init(frame, pDevice));
   pView->setColorPixelFormat(MTL::PixelFormat::PixelFormatBGRA8Unorm_sRGB);
   pView->setClearColor(MTL::ClearColor::Make(1.0, 0.0, 0.0, 1.0));
   pView->setEnableSetNeedsDisplay(false);
@@ -99,6 +100,7 @@ void AppDelegate::applicationDidFinishLaunching(
   NS::Application *pApp =
       reinterpret_cast<NS::Application *>(pNotification->object());
   pApp->activateIgnoringOtherApps(true);
+  wait.set_value();
 }
 
 bool AppDelegate::applicationShouldTerminateAfterLastWindowClosed(
@@ -107,6 +109,12 @@ bool AppDelegate::applicationShouldTerminateAfterLastWindowClosed(
                "closing"
             << std::endl;
   return true;
+}
+
+x3d::mesh::Cube AppDelegate::giveCube() {
+  std::cout << "[AppDelegate::giveCube] give cube" << std::endl;
+  auto cube = pRenderer->giveCube();
+  return cube;
 }
 
 void AppDelegate::draw() { pView->draw(); }

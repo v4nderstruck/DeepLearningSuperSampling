@@ -35,6 +35,8 @@ add_executable(metal_dlss
   ${SOURCE_FILES}
 )
 
+add_compile_options(-g -O)
+
 target_include_directories(metal_dlss
   PUBLIC ${CMAKE_SOURCE_DIR}/src/metal-cpp
   PUBLIC ${CMAKE_SOURCE_DIR}/src/metal-cpp/Metal
