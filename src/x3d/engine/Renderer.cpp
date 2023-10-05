@@ -1,4 +1,5 @@
 #include "Renderer.hpp"
+#include "../world/Nodes.hpp"
 #include "Metal.hpp"
 #include <chrono>
 #include <functional>
@@ -111,7 +112,7 @@ void Renderer::buildShaders() {
 
   vertexDescriptor->attributes()->object(0)->setFormat(
       MTL::VertexFormat::VertexFormatFloat3);
-    vertexDescriptor->attributes()->object(0)->setBufferIndex(0);
+  vertexDescriptor->attributes()->object(0)->setBufferIndex(0);
   vertexDescriptor->attributes()->object(0)->setOffset(0);
 
   std::cout << "sizeof(simd::float3): " << sizeof(simd::float3) << std::endl;
@@ -123,12 +124,14 @@ void Renderer::buildShaders() {
   vertexDescriptor->attributes()->object(2)->setFormat(
       MTL::VertexFormat::VertexFormatFloat4);
   vertexDescriptor->attributes()->object(2)->setBufferIndex(0);
-  vertexDescriptor->attributes()->object(2)->setOffset(sizeof(simd::float3) + sizeof(simd::float3));
+  vertexDescriptor->attributes()->object(2)->setOffset(sizeof(simd::float3) +
+                                                       sizeof(simd::float3));
 
   vertexDescriptor->attributes()->object(3)->setFormat(
       MTL::VertexFormat::VertexFormatFloat2);
   vertexDescriptor->attributes()->object(3)->setBufferIndex(0);
-  vertexDescriptor->attributes()->object(3)->setOffset(sizeof(simd::float3) + sizeof(simd::float3) + sizeof(simd::float4));
+  vertexDescriptor->attributes()->object(3)->setOffset(
+      sizeof(simd::float3) + sizeof(simd::float3) + sizeof(simd::float4));
 
   vertexDescriptor->layouts()->object(0)->setStride(sizeof(Vertex));
 
@@ -166,8 +169,12 @@ void Renderer::drawInMTKView(MTK::View *pView) {
               << "FPS: " << fps.getFPS() << std::flush;
   }
 }
-x3d::mesh::Cube Renderer::giveCube() {
-  std::cout << "[Renderer::giveCube] make cube" << std::endl;
-  return Cube::createMesh(pDevice.get(), 1.0, 1.0, 1.0,
-                          RGBAColor{1.0, 1.0, 0.0, 1.0});
+void Renderer::giveCube() {
+  using namespace x3d::world;
+  std::cout << "[Renderer::giveCube] make root" << std::endl;
+  Node n(std::move(std::string("root")));
+  std::cout << "[Renderer::giveCube] make cube at parent" << std::endl;
+  Node* actual_cube = Node::new_cube(&n, std::string("cube"), pDevice.get(), 1.0, 1.0, 1.0,
+                                    RGBAColor{1.0, 1.0, 0.0, 1.0});
+  std::cout << "[Renderer::giveCube] make cube done " << std::hex << (void*)actual_cube << std::endl;
 }

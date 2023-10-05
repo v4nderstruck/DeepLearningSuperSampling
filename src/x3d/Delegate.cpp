@@ -111,10 +111,9 @@ bool AppDelegate::applicationShouldTerminateAfterLastWindowClosed(
   return true;
 }
 
-x3d::mesh::Cube AppDelegate::giveCube() {
+void AppDelegate::giveCube() {
   std::cout << "[AppDelegate::giveCube] give cube" << std::endl;
-  auto cube = pRenderer->giveCube();
-  return cube;
+  pRenderer->giveCube();
 }
 
 void AppDelegate::draw() { pView->draw(); }

@@ -15,11 +15,10 @@
 
 void render_loop(x3d::AppDelegate *d) {
   std::cout << "[render_loop] enter loop create cube now" << std::endl;
-  // TODO: find better way to place mesh creator
-  auto cube = d->giveCube();
+  d->giveCube();
+  std::cout << "[render_loop] entering draw loop" << std::endl;
   while (1) {
     d->draw();
-
     std::this_thread::sleep_for(std::chrono::milliseconds(1000 / FPS));
   }
 }

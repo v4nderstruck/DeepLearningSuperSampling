@@ -19,7 +19,7 @@ public:
   applicationDidFinishLaunching(NS::Notification *pNotification) override;
   virtual bool applicationShouldTerminateAfterLastWindowClosed(
       NS::Application *pSender) override;
-  x3d::mesh::Cube giveCube();
+  void giveCube();
   void draw();
   std::promise<void> wait;
 private:

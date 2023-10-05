@@ -17,7 +17,7 @@ public:
 
   void buildShaders();
 
-  x3d::mesh::Cube giveCube();
+  void giveCube();
 
 private:
   FPS fps;

@@ -1,5 +1,6 @@
 #pragma once
 #include "Mesh.hpp"
+#include <iostream>
 namespace x3d {
 namespace mesh {
 
@@ -7,6 +8,10 @@ class Cube : public Mesh, public MeshFactory<Cube, float, float, float, RGBAColo
 public:
   enum FillMode { Fill, Wireframe };
   Cube(MTL::Device* device, float width, float height, float depth, RGBAColor color);
+  Cube(Cube&& other) = default;
+  ~Cube() override  {
+    std::cout << "[Cube::~Cube] destroying a cube" << std::endl;
+  }
   void render(MTL::RenderCommandEncoder *encoder) override;
 private:
   NS::SharedPtr<MTL::Buffer> vertexBuffer;

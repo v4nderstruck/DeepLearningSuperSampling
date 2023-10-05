@@ -1,8 +1,9 @@
 #pragma once
-#include <Metal/Metal.hpp>
-#include <simd/simd.h>
-#include <iostream>
 #include "Vertex.hpp"
+#include <Metal/Metal.hpp>
+#include <iostream>
+#include <memory>
+#include <simd/simd.h>
 namespace x3d {
 namespace mesh {
 
@@ -17,15 +18,18 @@ struct RGBAColor {
 
 class Mesh {
 public:
+  virtual ~Mesh() {
+    std::cout << "[Mesh::~Mesh] destroying a mesh" << std::endl;
+  };
   virtual void render(MTL::RenderCommandEncoder *encoder) = 0;
 };
 
 template <typename T, typename... Args> class MeshFactory {
 public:
   // This is not safe :(
-  static T createMesh(MTL::Device* device, Args&&... args) { 
-    std::cout << "MeshFactory::createMesh" << std::endl;
-    return T(device, std::forward<Args>(args)...); 
+  static std::unique_ptr<T> createMesh(MTL::Device *device, Args &&...args) {
+    std::cout << "[MeshFactory::createMesh] creating a mesh" << std::endl;
+    return std::make_unique<T>(device, std::forward<Args>(args)...);
   }
 };
 } // namespace mesh

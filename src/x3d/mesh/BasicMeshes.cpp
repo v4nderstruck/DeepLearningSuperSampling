@@ -1,9 +1,11 @@
 #include "BasicMeshes.hpp"
 #include "Vertex.hpp"
 #include <iostream>
+#include <ostream>
 #include <simd/vector_make.h>
 
 using namespace x3d::mesh;
+
 
 Cube::Cube(MTL::Device *device, float width, float height, float depth,
             RGBAColor color)
@@ -129,7 +131,7 @@ Cube::Cube(MTL::Device *device, float width, float height, float depth,
                      simd::make_float3(0.0, 0.0, 0.0), colorfloat4,
                      simd::make_float2(1.0, 0.0))};
 
-  std::cout << "[Cube] created vertices: " << vertices.size() << std::endl;
+  std::cout << "[Cube::Cube] created cube " << std::endl;
   vertexBuffer = Vertex::toBuffer(device, vertices);
   vertexCount = vertices.size();
 }
