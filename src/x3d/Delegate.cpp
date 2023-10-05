@@ -88,7 +88,7 @@ void AppDelegate::applicationDidFinishLaunching(
   pView->setEnableSetNeedsDisplay(false);
   pView->setPaused(true);
 
-  pRenderer = std::make_unique<engine::Renderer>(pDevice);
+  pRenderer = std::make_unique<engine::Renderer>(pDevice, pView->retain());
   pView->setDelegate(pRenderer.get());
 
   pWindow->setContentView(pView.get());

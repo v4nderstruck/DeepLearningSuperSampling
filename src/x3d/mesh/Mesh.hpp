@@ -25,7 +25,7 @@ public:
   // This is not safe :(
   static T createMesh(MTL::Device* device, Args&&... args) { 
     std::cout << "MeshFactory::createMesh" << std::endl;
-    return T::create(device, std::forward<Args>(args)...); 
+    return T(device, std::forward<Args>(args)...); 
   }
 };
 } // namespace mesh
