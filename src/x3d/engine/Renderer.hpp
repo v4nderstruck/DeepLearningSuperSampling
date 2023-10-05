@@ -1,17 +1,17 @@
 #pragma once
 
-#include "FPS.hpp"
-#include <Metal/Metal.hpp>
-#include <MetalKit/MetalKit.hpp>
-#include <thread>
 #include "../mesh/BasicMeshes.hpp"
+#include "Buffering.hpp"
+#include "FPS.hpp"
 #include "MetalKit/MTKView.hpp"
+#include <Metal/Metal.hpp>
+#include <thread>
 
 namespace x3d {
 namespace engine {
 class Renderer : public MTK::ViewDelegate {
 public:
-  Renderer(MTL::Device* device, MTK::View* view);
+  Renderer(MTL::Device *device, MTK::View *view);
   virtual ~Renderer() override;
   virtual void drawInMTKView(MTK::View *pView) override;
 
@@ -27,6 +27,7 @@ private:
   NS::SharedPtr<MTK::View> view;
   // FIXME: move render state to rendering a mesh
   NS::SharedPtr<MTL::RenderPipelineState> pipelineState;
+  BufferManager frameBuffer;
   int frame;
 };
 } // namespace engine

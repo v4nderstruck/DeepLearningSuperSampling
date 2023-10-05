@@ -4,6 +4,7 @@
 #include <functional>
 #include <iostream>
 #include <ostream>
+#include <vector>
 
 using namespace x3d::engine;
 using std::chrono::duration_cast;
@@ -11,14 +12,23 @@ using std::chrono::milliseconds;
 using std::chrono::system_clock;
 
 #define FRAME_AVG 30
+#define TRIPPLE_FRAME_BUFFERING 3
 
 using namespace x3d::mesh;
 
 Renderer::Renderer(MTL::Device *device, MTK::View *view)
     : MTK::ViewDelegate(), pDevice(NS::TransferPtr(device)), fps(FRAME_AVG),
-      frame(0), view(NS::RetainPtr(view)) {
+      frame(0), view(NS::RetainPtr(view)), frameBuffer(3) {
   pCommandQueue = NS::TransferPtr(pDevice->newCommandQueue());
   buildShaders();
+  // FIXME: missing proper buffer content!!
+  std::vector<NS::SharedPtr<MTL::Buffer>> trippleframeBuffers = {
+      NS::TransferPtr(pDevice->newBuffer(8, {})),
+      NS::TransferPtr(pDevice->newBuffer(8, {})),
+      NS::TransferPtr(pDevice->newBuffer(8, {})),
+  };
+
+  frameBuffer.manageThis(std::move(trippleframeBuffers));
 }
 
 Renderer::~Renderer() {}
@@ -94,14 +104,44 @@ void Renderer::buildShaders() {
   descriptor->setDepthAttachmentPixelFormat(view->depthStencilPixelFormat());
   descriptor->setVertexFunction(vertexFunc.get());
   descriptor->setFragmentFunction(fragmentFunc.get());
-  pipelineState = NS::TransferPtr(pDevice->newRenderPipelineState(
-      descriptor.get(), &error));
+
+  // FIXME: Proper VertexDescriptor needed, this is only for test
+  auto vertexDescriptor =
+      NS::TransferPtr(MTL::VertexDescriptor::alloc()->init());
+
+  vertexDescriptor->attributes()->object(0)->setFormat(
+      MTL::VertexFormat::VertexFormatFloat3);
+    vertexDescriptor->attributes()->object(0)->setBufferIndex(0);
+  vertexDescriptor->attributes()->object(0)->setOffset(0);
+
+  std::cout << "sizeof(simd::float3): " << sizeof(simd::float3) << std::endl;
+  vertexDescriptor->attributes()->object(1)->setFormat(
+      MTL::VertexFormat::VertexFormatFloat3);
+  vertexDescriptor->attributes()->object(1)->setBufferIndex(0);
+  vertexDescriptor->attributes()->object(1)->setOffset(sizeof(simd::float3));
+
+  vertexDescriptor->attributes()->object(2)->setFormat(
+      MTL::VertexFormat::VertexFormatFloat4);
+  vertexDescriptor->attributes()->object(2)->setBufferIndex(0);
+  vertexDescriptor->attributes()->object(2)->setOffset(sizeof(simd::float3) + sizeof(simd::float3));
+
+  vertexDescriptor->attributes()->object(3)->setFormat(
+      MTL::VertexFormat::VertexFormatFloat2);
+  vertexDescriptor->attributes()->object(3)->setBufferIndex(0);
+  vertexDescriptor->attributes()->object(3)->setOffset(sizeof(simd::float3) + sizeof(simd::float3) + sizeof(simd::float4));
+
+  vertexDescriptor->layouts()->object(0)->setStride(sizeof(Vertex));
+
+  descriptor->setVertexDescriptor(vertexDescriptor.get());
+
+  pipelineState = NS::TransferPtr(
+      pDevice->newRenderPipelineState(descriptor.get(), &error));
+
   if (pipelineState.get() == nullptr) {
     std::cout << "[Renderer::buildShaders] Error setting renderPipeline: "
-            << error->localizedDescription()->utf8String() << std::endl;
+              << error->localizedDescription()->utf8String() << std::endl;
     exit(1);
   }
-
 }
 
 void Renderer::drawInMTKView(MTK::View *pView) {
