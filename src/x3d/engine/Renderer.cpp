@@ -1,5 +1,6 @@
 #include "Renderer.hpp"
 #include "../world/Nodes.hpp"
+#include "Frame.hpp"
 #include "Metal.hpp"
 #include <chrono>
 #include <functional>
@@ -24,9 +25,9 @@ Renderer::Renderer(MTL::Device *device, MTK::View *view)
   buildShaders();
   // FIXME: missing proper buffer content!!
   std::vector<NS::SharedPtr<MTL::Buffer>> trippleframeBuffers = {
-      NS::TransferPtr(pDevice->newBuffer(8, {})),
-      NS::TransferPtr(pDevice->newBuffer(8, {})),
-      NS::TransferPtr(pDevice->newBuffer(8, {})),
+      NS::TransferPtr(pDevice->newBuffer(sizeof(Frame), {})),
+      NS::TransferPtr(pDevice->newBuffer(sizeof(Frame), {})),
+      NS::TransferPtr(pDevice->newBuffer(sizeof(Frame), {})),
   };
 
   frameBuffer.manageThis(std::move(trippleframeBuffers));

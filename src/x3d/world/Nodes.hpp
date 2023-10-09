@@ -2,6 +2,7 @@
 
 #include "../mesh/BasicMeshes.hpp"
 #include "../mesh/Mesh.hpp"
+#include "Metal.hpp"
 #include <functional>
 #include <iostream>
 #include <memory>
@@ -24,6 +25,7 @@ public:
   void setTranslation(simd::float3 &&position, simd::float3 &&scale,
                       simd::quatf &&rotation);
 
+  void render(MTL::RenderCommandEncoder* encoder);
   template <typename... Args>
   static Node *new_cube(Node *parent, std::string&& name, Args &&...args) {
     std::cout << "[Node::new_cube] creating a cube mesh" << std::endl;

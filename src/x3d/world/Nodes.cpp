@@ -9,4 +9,12 @@ void Node::setTranslation(simd::float3 &&position, simd::float3 &&scale, simd::q
   this->rotation = std::move(rotation);
 }
 
+void Node::render(MTL::RenderCommandEncoder* encoder) {
+  if (mesh) {
+    mesh->render(encoder);
+  }
+  for (auto &child : children) {
+    child->render(encoder);
+  }
+}
 

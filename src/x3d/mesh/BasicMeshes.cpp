@@ -138,6 +138,7 @@ Cube::Cube(MTL::Device *device, float width, float height, float depth,
 
 
 void Cube::render(MTL::RenderCommandEncoder *encoder) { 
+  // FIXME: reconsider Index
   encoder->setVertexBuffer(vertexBuffer.get(), 0, 0);
   encoder->drawPrimitives(MTL::PrimitiveTypeTriangle, 0, vertexCount, 1);
 }
