@@ -1,4 +1,6 @@
 #include "BasicMeshes.hpp"
+#include "../engine/Buffering.hpp"
+#include "Metal.hpp"
 #include "Vertex.hpp"
 #include <iostream>
 #include <ostream>
@@ -6,10 +8,8 @@
 
 using namespace x3d::mesh;
 
-
 Cube::Cube(MTL::Device *device, float width, float height, float depth,
-            RGBAColor color)
-    {
+           RGBAColor color) {
   float halfWidth = width / 2.0;
   float halfHeight = height / 2.0;
   float halfDepth = depth / 2.0;
@@ -136,9 +136,41 @@ Cube::Cube(MTL::Device *device, float width, float height, float depth,
   vertexCount = vertices.size();
 }
 
+void Cube::BuildVertexDescriptor() {
+  _vertexDescriptor =
+      NS::TransferPtr(MTL::VertexDescriptor::alloc()->init());
 
-void Cube::render(MTL::RenderCommandEncoder *encoder) { 
+  _vertexDescriptor->attributes()->object(0)->setFormat(
+      MTL::VertexFormat::VertexFormatFloat3);
+  _vertexDescriptor->attributes()->object(0)->setBufferIndex(0);
+  _vertexDescriptor->attributes()->object(0)->setOffset(0);
+
+  _vertexDescriptor->attributes()->object(1)->setFormat(
+      MTL::VertexFormat::VertexFormatFloat3);
+  _vertexDescriptor->attributes()->object(1)->setBufferIndex(0);
+  _vertexDescriptor->attributes()->object(1)->setOffset(sizeof(simd::float3));
+
+  _vertexDescriptor->attributes()->object(2)->setFormat(
+      MTL::VertexFormat::VertexFormatFloat4);
+  _vertexDescriptor->attributes()->object(2)->setBufferIndex(0);
+  _vertexDescriptor->attributes()->object(2)->setOffset(sizeof(simd::float3) +
+                                                       sizeof(simd::float3));
+
+  _vertexDescriptor->attributes()->object(3)->setFormat(
+      MTL::VertexFormat::VertexFormatFloat2);
+  _vertexDescriptor->attributes()->object(3)->setBufferIndex(0);
+  _vertexDescriptor->attributes()->object(3)->setOffset(
+      sizeof(simd::float3) + sizeof(simd::float3) + sizeof(simd::float4));
+
+  _vertexDescriptor->layouts()->object(0)->setStride(sizeof(Vertex));
+
+  
+}
+
+
+void Cube::render(MTL::RenderCommandEncoder *encoder) {
   // FIXME: reconsider Index
-  encoder->setVertexBuffer(vertexBuffer.get(), 0, 0);
+  encoder->setVertexBuffer(vertexBuffer.get(), 0,
+                           x3d::engine::ArgumentBufferIndex::VERTICES);
   encoder->drawPrimitives(MTL::PrimitiveTypeTriangle, 0, vertexCount, 1);
 }

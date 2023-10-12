@@ -1,5 +1,6 @@
 #pragma once
 #include "Mesh.hpp"
+#include "Metal.hpp"
 #include <iostream>
 namespace x3d {
 namespace mesh {
@@ -13,7 +14,10 @@ public:
     std::cout << "[Cube::~Cube] destroying a cube" << std::endl;
   }
   void render(MTL::RenderCommandEncoder *encoder) override;
+  void BuildVertexDescriptor() override;
+
 private:
+  NS::SharedPtr<MTL::RenderPipelineState> renderPipelineState;
   NS::SharedPtr<MTL::Buffer> vertexBuffer;
   long vertexCount;
 };

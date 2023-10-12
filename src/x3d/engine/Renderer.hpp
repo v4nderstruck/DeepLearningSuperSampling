@@ -14,9 +14,6 @@ public:
   Renderer(MTL::Device *device, MTK::View *view);
   virtual ~Renderer() override;
   virtual void drawInMTKView(MTK::View *pView) override;
-
-  void buildShaders();
-
   void giveCube();
 
 private:

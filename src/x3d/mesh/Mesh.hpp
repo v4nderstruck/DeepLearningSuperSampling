@@ -22,6 +22,19 @@ public:
     std::cout << "[Mesh::~Mesh] destroying a mesh" << std::endl;
   };
   virtual void render(MTL::RenderCommandEncoder *encoder) = 0;
+  // TODO: Implement basic render here
+  void UpdateRenderPipelineState(MTL::RenderCommandEncoder *enconder);
+  void BuildRenderPipelineState(MTL::Device *device, MTL::PixelFormat color, MTL::PixelFormat stencil);
+
+
+  virtual void BuildVertexDescriptor() = 0;
+  static MTL::Library* BuildShaders(MTL::Device* device);
+  NS::SharedPtr<MTL::VertexDescriptor> _vertexDescriptor;
+private:
+  NS::SharedPtr<MTL::Function> _vertexFn;
+  NS::SharedPtr<MTL::Function> _fragmentFn;
+  NS::SharedPtr<MTL::RenderPipelineState> _renderPipelineState;
+
 };
 
 template <typename T, typename... Args> class MeshFactory {

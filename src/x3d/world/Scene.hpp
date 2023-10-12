@@ -13,7 +13,6 @@ class Scene {
 
   void renderScene(MTL::RenderCommandEncoder* encoder);
 
-
 private:
   Node root;
   Perspective perspectiveCamera;
