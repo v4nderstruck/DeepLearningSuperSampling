@@ -20,9 +20,9 @@ using namespace x3d::mesh;
 
 Renderer::Renderer(MTL::Device *device, MTK::View *view)
     : MTK::ViewDelegate(), pDevice(NS::TransferPtr(device)), fps(FRAME_AVG),
-      frame(0), view(NS::RetainPtr(view)), frameBuffer(TRIPPLE_FRAME_BUFFERING){
+      frame(0), view(NS::RetainPtr(view)),
+      frameBuffer(TRIPPLE_FRAME_BUFFERING) {
   pCommandQueue = NS::TransferPtr(pDevice->newCommandQueue());
-  // FIXME: missing proper buffer content!!
   std::vector<NS::SharedPtr<MTL::Buffer>> trippleframeBuffers = {
       NS::TransferPtr(pDevice->newBuffer(sizeof(Frame), {})),
       NS::TransferPtr(pDevice->newBuffer(sizeof(Frame), {})),
@@ -67,7 +67,15 @@ void Renderer::giveCube() {
   std::cout << "[Renderer::giveCube] make root" << std::endl;
   Node n(std::move(std::string("root")));
   std::cout << "[Renderer::giveCube] make cube at parent" << std::endl;
-  Node* actual_cube = Node::new_cube(&n, std::string("cube"), pDevice.get(), 1.0, 1.0, 1.0,
-                                    RGBAColor{1.0, 1.0, 0.0, 1.0});
-  std::cout << "[Renderer::giveCube] make cube done " << std::hex << (void*)actual_cube << std::endl;
+  Node *actual_cube =
+      Node::new_cube(&n, std::string("cube"), pDevice.get(), library.get(), 1.0, 1.0, 1.0,
+                     RGBAColor{1.0, 1.0, 0.0, 1.0});
+
+  std::cout << "[Renderer::giveCube] build pipeline for node: "
+            << actual_cube->name << std::endl;
+
+  actual_cube->mesh->BuildRenderPipelineState(
+      pDevice.get(), library.get(),view->colorPixelFormat(), view->depthStencilPixelFormat());
+  std::cout << "[Renderer::giveCube] make cube done " << std::hex
+            << (void *)actual_cube << std::endl;
 }

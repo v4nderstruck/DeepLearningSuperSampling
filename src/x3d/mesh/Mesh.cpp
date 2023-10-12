@@ -61,24 +61,36 @@ MTL::Library *Mesh::BuildShaders(MTL::Device *device) {
               << error->localizedDescription()->utf8String() << std::endl;
     exit(1);
   }
-  auto vertexFn = NS::TransferPtr(lib->newFunction(NS::String::string(
-      "vertex_vertices", NS::StringEncoding::UTF8StringEncoding)));
-  auto fragmentFn = NS::TransferPtr(lib->newFunction(NS::String::string(
-      "fragment_color", NS::StringEncoding::UTF8StringEncoding)));
   return lib;
 }
 
-void Mesh::BuildRenderPipelineState(MTL::Device *device, MTL::PixelFormat color,
+void Mesh::BuildRenderPipelineState(MTL::Device *device, MTL::Library *lib,
+                                    MTL::PixelFormat color,
                                     MTL::PixelFormat stencil) {
+  BuildVertexDescriptor();
+
+  std::cout << "[Mesh::BuildRenderPipelineState] building render pipeline "
+               "descriptor"
+            << std::endl;
   auto descriptor =
       NS::TransferPtr(MTL::RenderPipelineDescriptor::alloc()->init());
   descriptor->colorAttachments()->object(0)->setPixelFormat(color);
   descriptor->setDepthAttachmentPixelFormat(stencil);
 
-  descriptor->setVertexFunction(_vertexFn.get());
-  descriptor->setFragmentFunction(_fragmentFn.get());
+  auto vertexFn = NS::TransferPtr(lib->newFunction(
+      NS::String::string("vertex_vertices", NS::StringEncoding::UTF8StringEncoding)));
+  auto fragmentFn = NS::TransferPtr(lib->newFunction(
+      NS::String::string("fragment_color", NS::StringEncoding::UTF8StringEncoding)));
+
+  descriptor->setVertexFunction(vertexFn.get());
+  descriptor->setFragmentFunction(fragmentFn.get());
   descriptor->setVertexDescriptor(_vertexDescriptor.get());
 
+
+
+  std::cout << "[Mesh::BuildRenderPipelineState] building render pipeline "
+               "state"
+            << std::endl;
   NS::Error *error = nullptr;
   _renderPipelineState =
       NS::TransferPtr(device->newRenderPipelineState(descriptor.get(), &error));

@@ -1,4 +1,5 @@
 #include "Scene.hpp"
+#include <simd/matrix_types.h>
 #include <simd/simd.h>
 
 using namespace x3d::world;
@@ -15,6 +16,11 @@ Scene::Scene() : root("root"), perspectiveCamera() {
 }
 
 void Scene::renderScene(MTL::RenderCommandEncoder* encoder) {
-  root.render(encoder);
+  simd::float4x4 identity = simd::float4x4();
+  identity.columns[0] = simd::make_float4(1, 0, 0, 0);
+  identity.columns[1] = simd::make_float4(0, 1, 0, 0);
+  identity.columns[2] = simd::make_float4(0, 0, 1, 0);
+  identity.columns[3] = simd::make_float4(0, 0, 0, 1);
+  root.render(encoder, identity);
 }
 
