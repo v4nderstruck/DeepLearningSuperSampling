@@ -19,12 +19,12 @@ public:
   applicationDidFinishLaunching(NS::Notification *pNotification) override;
   virtual bool applicationShouldTerminateAfterLastWindowClosed(
       NS::Application *pSender) override;
-  void giveCube();
   void draw();
   std::promise<void> wait;
+
+  std::unique_ptr<engine::Renderer> pRenderer;
 private:
   NS::SharedPtr<MTK::View> pView;
   NS::SharedPtr<NS::Window> pWindow;
-  std::unique_ptr<engine::Renderer> pRenderer;
 };
 } // namespace x3d

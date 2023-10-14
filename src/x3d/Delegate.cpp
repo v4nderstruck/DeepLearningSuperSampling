@@ -111,9 +111,4 @@ bool AppDelegate::applicationShouldTerminateAfterLastWindowClosed(
   return true;
 }
 
-void AppDelegate::giveCube() {
-  std::cout << "[AppDelegate::giveCube] give cube" << std::endl;
-  pRenderer->giveCube();
-}
-
 void AppDelegate::draw() { pView->draw(); }

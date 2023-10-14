@@ -35,8 +35,8 @@ MTL::Library *Mesh::BuildShaders(MTL::Device *device) {
 
   vertex VertexOut vertex_vertices(
     const VertexIn vertex_array [[stage_in]], 
-    const device Uniforms& uniforms [[buffer(0)]], 
-    const device ModelUniforms& model_uniforms [[buffer(1)]]
+    const device Uniforms& uniforms [[buffer(1)]], 
+    const device ModelUniforms& model_uniforms [[buffer(2)]]
   ) {
     VertexOut out;
     out.position = uniforms.projectionMatrix * uniforms.viewMatrix * model_uniforms.modelMatrix * float4(vertex_array.position, 1.0);

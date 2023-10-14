@@ -6,6 +6,7 @@
 #include <functional>
 #include <iostream>
 #include <ostream>
+#include <tuple>
 #include <vector>
 
 using namespace x3d::engine;
@@ -35,7 +36,7 @@ Renderer::Renderer(MTL::Device *device, MTK::View *view)
 
   frameBuffer.manageThis(std::move(trippleframeBuffers));
 
-  library = NS::TransferPtr(mesh::Mesh::BuildShaders(pDevice.get()));
+  pLibrary = NS::TransferPtr(mesh::Mesh::BuildShaders(pDevice.get()));
 }
 
 Renderer::~Renderer() {}
@@ -50,7 +51,13 @@ void Renderer::drawInMTKView(MTK::View *pView) {
 
   MTL::CommandBuffer *pCmd = pCommandQueue->commandBuffer();
   MTL::RenderPassDescriptor *pRpd = pView->currentRenderPassDescriptor();
+
+  pRpd->colorAttachments()->object(0)->setLoadAction(
+      MTL::LoadAction::LoadActionClear);
+  pRpd->colorAttachments()->object(0)->setClearColor(scene.clearColor);
+
   MTL::RenderCommandEncoder *pEnc = pCmd->renderCommandEncoder(pRpd);
+  scene.renderScene(pEnc);
   pEnc->endEncoding();
   pCmd->presentDrawable(pView->currentDrawable());
   pCmd->commit();
@@ -62,20 +69,8 @@ void Renderer::drawInMTKView(MTK::View *pView) {
               << "FPS: " << fps.getFPS() << std::flush;
   }
 }
-void Renderer::giveCube() {
-  using namespace x3d::world;
-  std::cout << "[Renderer::giveCube] make root" << std::endl;
-  Node n(std::move(std::string("root")));
-  std::cout << "[Renderer::giveCube] make cube at parent" << std::endl;
-  Node *actual_cube =
-      Node::new_cube(&n, std::string("cube"), pDevice.get(), library.get(), 1.0, 1.0, 1.0,
-                     RGBAColor{1.0, 1.0, 0.0, 1.0});
 
-  std::cout << "[Renderer::giveCube] build pipeline for node: "
-            << actual_cube->name << std::endl;
-
-  actual_cube->mesh->BuildRenderPipelineState(
-      pDevice.get(), library.get(),view->colorPixelFormat(), view->depthStencilPixelFormat());
-  std::cout << "[Renderer::giveCube] make cube done " << std::hex
-            << (void *)actual_cube << std::endl;
+std::tuple<MTL::PixelFormat, MTL::PixelFormat> Renderer::getPixelFormat() {
+  return std::make_tuple(view->colorPixelFormat(),
+                         view->depthStencilPixelFormat());
 }

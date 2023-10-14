@@ -169,7 +169,6 @@ void Cube::BuildVertexDescriptor() {
 
 
 void Cube::render(MTL::RenderCommandEncoder *encoder) {
-  // FIXME: reconsider Index
   encoder->setVertexBuffer(vertexBuffer.get(), 0,
                            x3d::engine::ArgumentBufferIndex::VERTICES);
   encoder->drawPrimitives(MTL::PrimitiveTypeTriangle, 0, vertexCount, 1);

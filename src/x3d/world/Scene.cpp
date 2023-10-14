@@ -4,7 +4,7 @@
 
 using namespace x3d::world;
 
-Scene::Scene() : root("root"), perspectiveCamera() {
+Scene::Scene() : root("root"), perspectiveCamera(), clearColor(0.0, 0.0, 0.0, 1.0) {
   root.setTranslation(simd::make_float3(0.0f, 0.0f, 0.0f),
                       simd::make_float3(1.0f, 1.0f, 1.0f),
                       simd::quatf(0.0, simd::make_float3(1.0, 0.0, 0.0)));

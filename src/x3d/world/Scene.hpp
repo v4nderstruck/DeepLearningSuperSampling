@@ -5,17 +5,17 @@
 #include "Nodes.hpp"
 namespace x3d {
 namespace world {
-using namespace x3d::mesh;
-using namespace camera;
+
 class Scene {
-
+public:
   Scene();
-
   void renderScene(MTL::RenderCommandEncoder* encoder);
 
-private:
+
+  MTL::ClearColor clearColor;
   Node root;
-  Perspective perspectiveCamera;
+private:
+  camera::Perspective perspectiveCamera;
 };
 }
 } // namespace x3d
