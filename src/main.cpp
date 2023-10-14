@@ -17,23 +17,6 @@
 using namespace x3d::world;
 void render_loop(x3d::AppDelegate *d) {
 
-  /* std::cout << "[Renderer::giveCube] make root" << std::endl; */
-  /* Node n(std::move(std::string("root"))); */
-  /* std::cout << "[Renderer::giveCube] make cube at parent" << std::endl; */
-  /* Node *actual_cube = */
-  /*     Node::new_cube(&n, std::string("cube"), pDevice.get(),
-   * library.get(), 1.0, 1.0, 1.0, */
-  /*                    RGBAColor{1.0, 1.0, 0.0, 1.0}); */
-  /**/
-  /* std::cout << "[Renderer::giveCube] build pipeline for node: " */
-  /*           << actual_cube->name << std::endl; */
-  /**/
-  /* actual_cube->mesh->BuildRenderPipelineState( */
-  /*     pDevice.get(), library.get(),view->colorPixelFormat(),
-   * view->depthStencilPixelFormat()); */
-  /* std::cout << "[Renderer::giveCube] make cube done " << std::hex */
-  /*           << (void *)actual_cube << std::endl; */
-  /* std::cout << "[render_loop] entering draw loop" << std::endl; */
 
   auto root = &(d->pRenderer->scene.root);
 
@@ -41,13 +24,16 @@ void render_loop(x3d::AppDelegate *d) {
             << std::endl;
   Node *actual_cube =
       Node::new_cube(root, std::string("cube"), d->pRenderer->pDevice.get(),
-                     d->pRenderer->pLibrary.get(), 1.0, 1.0, 1.0,
-                     RGBAColor{1.0, 1.0, 0.0, 1.0});
+                     d->pRenderer->pLibrary.get(), 3.0, 3.0, 3.0,
+                     RGBAColor{1.0, 1.0, 1.0, 1.0});
   auto pixelFormat = d->pRenderer->getPixelFormat();
+  actual_cube->mesh->BuildVertexDescriptor();  
   actual_cube->mesh->BuildRenderPipelineState(
       d->pRenderer->pDevice.get(), d->pRenderer->pLibrary.get(),
       std::get<0>(pixelFormat), std::get<1>(pixelFormat));
   std::cout << "[render_loop] Cube ptr " << std::hex << (void *)actual_cube
+            << std::endl;
+  std::cout << "[render_loop] Scene children " << d->pRenderer->scene.root.children.size()
             << std::endl;
   while (1) {
     d->draw();

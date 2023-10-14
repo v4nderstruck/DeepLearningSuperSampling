@@ -1,6 +1,7 @@
 #include "Nodes.hpp"
 #include "../engine/Buffering.hpp"
 #include <simd/matrix_types.h>
+#include <simd/quaternion.h>
 #include <simd/vector_make.h>
 
 using namespace x3d::world;
@@ -21,8 +22,7 @@ void Node::render(MTL::RenderCommandEncoder *encoder,
   posTransform.columns[2] = simd::make_float4(0, 0, 1, 0);
   posTransform.columns[3] = simd::make_float4(position, 1);
 
-  auto rotTransform = simd::float4x4(rotation);
-  rotTransform.columns[3][3] = 1.0f;
+  auto rotTransform = simd::quatf(0.0, simd::make_float3(1.0, 0.0, 0.0));
   posTransform = parentTransform * (posTransform * rotTransform);
   if (mesh) {
 

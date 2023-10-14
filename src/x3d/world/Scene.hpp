@@ -14,7 +14,6 @@ public:
 
   MTL::ClearColor clearColor;
   Node root;
-private:
   camera::Perspective perspectiveCamera;
 };
 }

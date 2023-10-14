@@ -3,6 +3,8 @@ project (metal_dlss)
 
 set(CMAKE_CXX_STANDARD 17)
 
+set(LINK_INFO_PLIST -sectcreate __TEXT __info_plist ${CMAKE_CURRENT_SOURCE_DIR}/src/Info.plist)
+
 find_library(APPLE_FWK_METAL Metal REQUIRED)
 if(NOT APPLE_FWK_METAL)
   message(FATAL_ERROR "Metal library not found")
@@ -42,6 +44,8 @@ target_include_directories(metal_dlss
   PUBLIC ${CMAKE_SOURCE_DIR}/src/metal-cpp
   PUBLIC ${CMAKE_SOURCE_DIR}/src/metal-cpp/Metal
 )
+
+target_link_options(metal_dlss PRIVATE  ${LINK_INFO_PLIST})
 
 target_link_libraries(metal_dlss
   PRIVATE ${APPLE_FWK_FOUNDATION}

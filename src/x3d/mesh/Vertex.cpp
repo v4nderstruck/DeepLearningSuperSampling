@@ -16,8 +16,11 @@ Vertex Vertex::create(simd::float3 position, simd::float3 normal,
 
 NS::SharedPtr<MTL::Buffer> Vertex::toBuffer(MTL::Device *device,
                                             std::vector<Vertex> &vertices) {
-  return NS::TransferPtr(
-      device->newBuffer(vertices.data(), sizeof(Vertex) * vertices.size(), {}));
+  auto buffer = device->newBuffer(sizeof(Vertex) * vertices.size(),
+                                  MTL::ResourceStorageModeManaged);
+  memcpy(buffer->contents(), vertices.data(), sizeof(Vertex) * vertices.size());
+  buffer->didModifyRange(NS::Range(0, buffer->length()));
+  return NS::TransferPtr(buffer);
 }
 
 void Vertex::debug_size() {

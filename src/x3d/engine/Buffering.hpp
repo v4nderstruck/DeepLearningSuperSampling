@@ -15,7 +15,8 @@ enum ArgumentBufferIndex {
 class BufferManager {
 public:
   BufferManager(size_t size);
-  void manageThis(std::vector<NS::SharedPtr<MTL::Buffer>> buffers);
+  void manageThis(std::vector<NS::SharedPtr<MTL::Buffer>> &&buffers);
+  MTL::Buffer* nextBuffer();
   void freeBuffer();
 private:
   std::vector<NS::SharedPtr<MTL::Buffer>> buffers;

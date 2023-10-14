@@ -15,6 +15,10 @@ namespace world {
 using namespace x3d::mesh;
 class Node {
 public:
+  Node()
+      : position(simd::make_float3(0.0, 0.0, 0.0)),
+        scale(simd::make_float3(1.0, 1.0, 1.0)),
+        rotation(simd::quatf(0.0, simd::make_float3(1.0, 0, 0))) {}
   Node(std::string &&name) : name(name) {}
   Node(Node &&node) : parent(node.parent), mesh(std::move(node.mesh)){};
   Node(std::unique_ptr<Mesh> &&mesh, Node *parent, std::string &&name)
@@ -49,10 +53,10 @@ public:
   std::unique_ptr<Mesh> mesh;
   std::string name;
 
+  std::vector<std::unique_ptr<Node>> children;
 private:
   Node *parent;
   std::function<void(Node *, int)> update;
-  std::vector<std::unique_ptr<Node>> children;
   simd::float3 position;
   simd::float3 scale;
   simd::quatf rotation;

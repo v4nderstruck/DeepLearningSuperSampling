@@ -21,6 +21,7 @@ MTL::Library *Mesh::BuildShaders(MTL::Device *device) {
     float4 position [[position]];
     float4 color;
     float2 tex;
+
   };
 
   struct Uniforms {
@@ -39,7 +40,7 @@ MTL::Library *Mesh::BuildShaders(MTL::Device *device) {
     const device ModelUniforms& model_uniforms [[buffer(2)]]
   ) {
     VertexOut out;
-    out.position = uniforms.projectionMatrix * uniforms.viewMatrix * model_uniforms.modelMatrix * float4(vertex_array.position, 1.0);
+    out.position = uniforms.projectionMatrix *  model_uniforms.modelMatrix * float4(vertex_array.position, 1.0);
     out.color = vertex_array.color;
     out.tex = vertex_array.textureCoordinate;
     return out;
@@ -85,7 +86,6 @@ void Mesh::BuildRenderPipelineState(MTL::Device *device, MTL::Library *lib,
   descriptor->setVertexFunction(vertexFn.get());
   descriptor->setFragmentFunction(fragmentFn.get());
   descriptor->setVertexDescriptor(_vertexDescriptor.get());
-
 
 
   std::cout << "[Mesh::BuildRenderPipelineState] building render pipeline "

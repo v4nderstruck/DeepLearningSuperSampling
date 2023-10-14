@@ -25,6 +25,8 @@ public:
   }
   void buildCamera();
 
+  simd::float4x4 projectionMatrix;
+  simd::float4x4 viewMatrix;
 private:
   simd::float3 position;
   simd::float3 lookAt;
@@ -34,8 +36,6 @@ private:
   float near;
   float far;
 
-  simd::float4x4 projectionMatrix;
-  simd::float4x4 viewMatrix;
 };
 } // namespace perspective
 } // namespace world

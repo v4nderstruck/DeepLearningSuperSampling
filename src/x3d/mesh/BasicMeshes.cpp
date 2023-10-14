@@ -142,28 +142,27 @@ void Cube::BuildVertexDescriptor() {
 
   _vertexDescriptor->attributes()->object(0)->setFormat(
       MTL::VertexFormat::VertexFormatFloat3);
-  _vertexDescriptor->attributes()->object(0)->setBufferIndex(0);
+  _vertexDescriptor->attributes()->object(0)->setBufferIndex(x3d::engine::ArgumentBufferIndex::VERTICES);
   _vertexDescriptor->attributes()->object(0)->setOffset(0);
 
   _vertexDescriptor->attributes()->object(1)->setFormat(
       MTL::VertexFormat::VertexFormatFloat3);
-  _vertexDescriptor->attributes()->object(1)->setBufferIndex(0);
+  _vertexDescriptor->attributes()->object(1)->setBufferIndex(x3d::engine::ArgumentBufferIndex::VERTICES);
   _vertexDescriptor->attributes()->object(1)->setOffset(sizeof(simd::float3));
 
   _vertexDescriptor->attributes()->object(2)->setFormat(
       MTL::VertexFormat::VertexFormatFloat4);
-  _vertexDescriptor->attributes()->object(2)->setBufferIndex(0);
+  _vertexDescriptor->attributes()->object(2)->setBufferIndex(x3d::engine::ArgumentBufferIndex::VERTICES);
   _vertexDescriptor->attributes()->object(2)->setOffset(sizeof(simd::float3) +
                                                        sizeof(simd::float3));
 
   _vertexDescriptor->attributes()->object(3)->setFormat(
       MTL::VertexFormat::VertexFormatFloat2);
-  _vertexDescriptor->attributes()->object(3)->setBufferIndex(0);
+  _vertexDescriptor->attributes()->object(3)->setBufferIndex(x3d::engine::ArgumentBufferIndex::VERTICES);
   _vertexDescriptor->attributes()->object(3)->setOffset(
       sizeof(simd::float3) + sizeof(simd::float3) + sizeof(simd::float4));
 
   _vertexDescriptor->layouts()->object(0)->setStride(sizeof(Vertex));
-
   
 }
 
@@ -171,5 +170,6 @@ void Cube::BuildVertexDescriptor() {
 void Cube::render(MTL::RenderCommandEncoder *encoder) {
   encoder->setVertexBuffer(vertexBuffer.get(), 0,
                            x3d::engine::ArgumentBufferIndex::VERTICES);
+  encoder->setTriangleFillMode(MTL::TriangleFillMode::TriangleFillModeFill);
   encoder->drawPrimitives(MTL::PrimitiveTypeTriangle, 0, vertexCount, 1);
 }
