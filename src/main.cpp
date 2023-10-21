@@ -24,10 +24,10 @@ void render_loop(x3d::AppDelegate *d) {
             << std::endl;
   Node *actual_cube =
       Node::new_cube(root, std::string("cube"), d->pRenderer->pDevice.get(),
-                     d->pRenderer->pLibrary.get(), 3.0, 3.0, 3.0,
-                     RGBAColor{1.0, 1.0, 1.0, 1.0});
+                     d->pRenderer->pLibrary.get(), 3.0, 3.0,3.0,
+                     RGBAColor{1.0, 1.0, 0.0, 1.0});
   auto pixelFormat = d->pRenderer->getPixelFormat();
-  actual_cube->mesh->BuildVertexDescriptor();  
+  //actual_cube->mesh->BuildVertexDescriptor();  
   actual_cube->mesh->BuildRenderPipelineState(
       d->pRenderer->pDevice.get(), d->pRenderer->pLibrary.get(),
       std::get<0>(pixelFormat), std::get<1>(pixelFormat));

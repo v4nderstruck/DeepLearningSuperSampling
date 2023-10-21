@@ -36,14 +36,12 @@ public:
   template <typename... Args>
   static Node *new_cube(Node *parent, std::string &&name, MTL::Device *device,
                         MTL::Library *lib, Args &&...args) {
-    std::cout << "[Node::new_cube] creating a cube mesh" << std::endl;
-    /* cube->BuildRenderPipelineState(device, lib,
-       MTL::PixelFormat::PixelFormatBGRA8Unorm,
-       MTL::PixelFormat::PixelFormatDepth16Unorm); */
+
     std::cout << "[Node::new_cube] creating a cube node" << std::endl;
     auto node = std::make_unique<Node>(
         Cube::createMesh(device, std::forward<Args>(args)...), parent,
         std::move(name));
+    std::cout << "[Node::new_cube] cube is at x:" << node->position.x  << " " << node->position.y << " " << node->position.z << std::endl; 
     std::cout << "[Node::new_cube] move node to parent's children" << std::endl;
     parent->children.push_back(std::move(node));
     std::cout << "[Node::new_cube] returning nodeptr" << std::endl;

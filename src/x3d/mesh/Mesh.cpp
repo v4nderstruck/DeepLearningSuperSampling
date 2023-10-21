@@ -11,10 +11,10 @@ MTL::Library *Mesh::BuildShaders(MTL::Device *device) {
   using namespace metal;
   
   struct VertexIn {
-    float3 position [[attribute(0)]];
-    float3 normal [[attribute(1)]];
-    float4 color [[attribute(2)]];
-    float2 textureCoordinate [[attribute(3)]];
+    float3 position;
+    float3 normal;
+    float4 color;
+    float2 textureCoordinate;
   };
   
   struct VertexOut {
@@ -25,7 +25,6 @@ MTL::Library *Mesh::BuildShaders(MTL::Device *device) {
   };
 
   struct Uniforms {
-    int2 resolution;
     float4x4 viewMatrix;
     float4x4 projectionMatrix;
   };
@@ -34,22 +33,32 @@ MTL::Library *Mesh::BuildShaders(MTL::Device *device) {
     float4x4 modelMatrix;
   };
 
+  struct FragmentOut {
+  float4 color [[color(0)]];
+  };
+
   vertex VertexOut vertex_vertices(
-    const VertexIn vertex_array [[stage_in]], 
+    const device VertexIn* vertex_array [[buffer(0)]], 
     const device Uniforms& uniforms [[buffer(1)]], 
-    const device ModelUniforms& model_uniforms [[buffer(2)]]
+    const device ModelUniforms& model_uniforms [[buffer(2)]],
+    uint vertexId [[vertex_id]]
   ) {
     VertexOut out;
-    out.position = uniforms.projectionMatrix *  model_uniforms.modelMatrix * float4(vertex_array.position, 1.0);
-    out.color = vertex_array.color;
-    out.tex = vertex_array.textureCoordinate;
+    out.position =  uniforms.projectionMatrix * 
+                      uniforms.viewMatrix  * 
+                      model_uniforms.modelMatrix *  
+                      float4(vertex_array[vertexId].position, 1.0);
+    out.color = vertex_array[vertexId].color;
+    out.tex = vertex_array[vertexId].textureCoordinate;
     return out;
   }
  
-  fragment float4 fragment_color(
+  fragment FragmentOut fragment_color(
     VertexOut in [[stage_in]]
   ) {
-    return in.color;
+    FragmentOut  out;
+    out.color = in.color;
+    return out;
   }
   
 )";
@@ -85,7 +94,7 @@ void Mesh::BuildRenderPipelineState(MTL::Device *device, MTL::Library *lib,
 
   descriptor->setVertexFunction(vertexFn.get());
   descriptor->setFragmentFunction(fragmentFn.get());
-  descriptor->setVertexDescriptor(_vertexDescriptor.get());
+  //  descriptor->setVertexDescriptor(_vertexDescriptor.get());
 
 
   std::cout << "[Mesh::BuildRenderPipelineState] building render pipeline "

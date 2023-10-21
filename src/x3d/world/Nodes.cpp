@@ -24,8 +24,8 @@ void Node::render(MTL::RenderCommandEncoder *encoder,
 
   auto rotTransform = simd::quatf(0.0, simd::make_float3(1.0, 0.0, 0.0));
   posTransform = parentTransform * (posTransform * rotTransform);
-  if (mesh) {
 
+  if (mesh) {
     encoder->setVertexBytes(&posTransform, sizeof(simd::float4x4),
                             x3d::engine::ArgumentBufferIndex::MODELS);
     mesh->UpdateRenderPipelineState(encoder);

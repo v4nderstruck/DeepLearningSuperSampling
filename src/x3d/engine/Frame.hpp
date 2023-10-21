@@ -8,7 +8,6 @@ namespace engine {
 using namespace x3d::world::camera;
 class Frame {
 public:
-  simd::int2 resolution;
   simd::float4x4 viewMatrix;
   simd::float4x4 projectionMatrix;
 };

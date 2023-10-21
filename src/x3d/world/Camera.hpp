@@ -9,20 +9,10 @@ namespace camera {
 class Perspective {
 public:
   Perspective() = default;
-  Perspective(simd::float3 &&position, simd::float3 &&lookAt, simd::float3 &&up,
-         float fov, float aspectRatio, float near, float far)
-      : position(position), lookAt(lookAt), up(up), fov(fov),
-        aspectRatio(aspectRatio), near(near), far(far) {}
+
   void setInternals(simd::float3 &&position, simd::float3 &&lookAt, simd::float3 &&up,
-         float fov, float aspectRatio, float near, float far) {
-    position = position;
-    lookAt = lookAt;
-    up = up;
-    fov = fov;
-    aspectRatio = aspectRatio;
-    near = near;
-    far = far;
-  }
+         float fov, float aspectRatio, float near, float far);
+
   void buildCamera();
 
   simd::float4x4 projectionMatrix;

@@ -24,6 +24,7 @@ public:
   x3d::world::Scene scene;
 private:
   FPS fps;
+  NS::SharedPtr<MTL::DepthStencilState> pDepthStencilState;
   NS::SharedPtr<MTL::CommandQueue> pCommandQueue;
   NS::SharedPtr<MTK::View> view;
   BufferManager frameBuffer;
