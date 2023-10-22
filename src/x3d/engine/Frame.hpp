@@ -8,8 +8,8 @@ namespace engine {
 using namespace x3d::world::camera;
 class Frame {
 public:
-  simd::float4x4 viewMatrix;
-  simd::float4x4 projectionMatrix;
+  simd_float4x4 viewMatrix;
+  simd_float4x4 projectionMatrix;
 };
 }
 } // namespace x3d

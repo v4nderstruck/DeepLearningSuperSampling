@@ -109,5 +109,5 @@ void Cube::render(MTL::RenderCommandEncoder *encoder) {
   encoder->setVertexBuffer(vertexBuffer.get(), 0,
                            x3d::engine::ArgumentBufferIndex::VERTICES);
   encoder->setTriangleFillMode(MTL::TriangleFillModeLines);
-  encoder->drawPrimitves(MTL::PrimitiveTypeTriangle, 0, vertexCount, 1);
+  encoder->drawPrimitives(MTL::PrimitiveTypeTriangle, 0, vertexCount, 1);
 }

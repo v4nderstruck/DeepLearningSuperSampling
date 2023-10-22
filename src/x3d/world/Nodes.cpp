@@ -23,7 +23,7 @@ void Node::render(MTL::RenderCommandEncoder *encoder,
   posTransform.columns[3] = simd::make_float4(position, 1);
 
   auto rotTransform = simd::quatf(0.0, simd::make_float3(1.0, 0.0, 0.0));
-  posTransform = parentTransform * (posTransform * rotTransform);
+  posTransform = matrix_identity_float4x4;
 
   if (mesh) {
     encoder->setVertexBytes(&posTransform, sizeof(simd::float4x4),

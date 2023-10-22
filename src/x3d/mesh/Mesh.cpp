@@ -44,10 +44,10 @@ MTL::Library *Mesh::BuildShaders(MTL::Device *device) {
     uint vertexId [[vertex_id]]
   ) {
     VertexOut out;
-    out.position =  uniforms.projectionMatrix * 
-                      uniforms.viewMatrix  * 
-                      model_uniforms.modelMatrix *  
-                      float4(vertex_array[vertexId].position, 1.0);
+    float4 pos = float4(vertex_array[vertexId].position, 1.0);
+    float4x4 mvp = uniforms.projectionMatrix * model_uniforms.modelMatrix;
+    pos = mvp * pos;
+    out.position = pos; 
     out.color = vertex_array[vertexId].color;
     out.tex = vertex_array[vertexId].textureCoordinate;
     return out;

@@ -7,8 +7,10 @@
 #include <functional>
 #include <iostream>
 #include <ostream>
+#include <simd/matrix.h>
 #include <tuple>
 #include <vector>
+#include <simd/simd.h>
 
 using namespace x3d::engine;
 using std::chrono::duration_cast;
@@ -25,6 +27,7 @@ Renderer::Renderer(MTL::Device *device, MTK::View *view)
       frame(0), view(NS::RetainPtr(view)), scene(), 
       frameBuffer(TRIPPLE_FRAME_BUFFERING) {
   pCommandQueue = NS::TransferPtr(pDevice->newCommandQueue());
+  std::cout << "Frame size " << sizeof(Frame) << std::endl;
   std::vector<NS::SharedPtr<MTL::Buffer>> trippleframeBuffers = {
       NS::TransferPtr(pDevice->newBuffer(sizeof(Frame), MTL::ResourceStorageModeManaged)),
       NS::TransferPtr(pDevice->newBuffer(sizeof(Frame), MTL::ResourceStorageModeManaged)),
@@ -55,7 +58,7 @@ void Renderer::drawInMTKView(MTK::View *pView) {
 
   NS::AutoreleasePool *pPool = NS::AutoreleasePool::alloc()->init();
 
-  auto debugger = Debugger::createDebugger(pDevice.get());
+  /* auto debugger = Debugger::createDebugger(pDevice.get()); */
 
   MTL::CommandBuffer *pCmd = pCommandQueue->commandBuffer();
   auto uniformBuffer = frameBuffer.nextBuffer();
@@ -65,7 +68,9 @@ void Renderer::drawInMTKView(MTK::View *pView) {
   /*                              (int)pView->drawableSize().height}; */
 
   frameUniforms->viewMatrix = scene.perspectiveCamera.viewMatrix;
-  frameUniforms->projectionMatrix = scene.perspectiveCamera.projectionMatrix;
+  auto p = scene.perspectiveCamera.projectionMatrix;
+  auto v = scene.perspectiveCamera.viewMatrix;
+  frameUniforms->projectionMatrix = simd_mul(p,v);
 
   uniformBuffer->didModifyRange(NS::Range::Make(0, uniformBuffer->length()));
 
@@ -80,9 +85,10 @@ void Renderer::drawInMTKView(MTK::View *pView) {
   pRpd->colorAttachments()->object(0)->setClearColor(scene.clearColor);
 
   MTL::RenderCommandEncoder *pEnc = pCmd->renderCommandEncoder(pRpd);
+
+  pEnc->setDepthStencilState(pDepthStencilState.get());
   pEnc->setVertexBuffer(uniformBuffer, 0, ArgumentBufferIndex::UNIFORMS);
   pEnc->setFragmentBuffer(uniformBuffer, 0, ArgumentBufferIndex::UNIFORMS);
-  pEnc->setDepthStencilState(pDepthStencilState.get());
   pEnc->setCullMode(MTL::CullModeBack);
 
   scene.renderScene(pEnc);
@@ -90,7 +96,7 @@ void Renderer::drawInMTKView(MTK::View *pView) {
   pCmd->presentDrawable(pView->currentDrawable());
   pCmd->commit();
 
-  debugger->stopCapture();
+  /* debugger->stopCapture(); */
 
   pPool->release();
 
@@ -99,7 +105,7 @@ void Renderer::drawInMTKView(MTK::View *pView) {
     std::cout << "\r"
               << "FPS: " << fps.getFPS() << std::flush;
   }
-    exit(1);
+  /* exit(1); */
 }
 
 std::tuple<MTL::PixelFormat, MTL::PixelFormat> Renderer::getPixelFormat() {

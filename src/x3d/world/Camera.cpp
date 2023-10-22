@@ -15,7 +15,7 @@ void Perspective::buildCamera() {
   /* p.m32 = zs * near; */
   /* projectionMatrix = GLKMatrix4ToSimdFloat4x4(p); */
 
-  projectionMatrix = makePerspective((fov * M_PI) / 180.0, aspectRatio, near, far);
+  projectionMatrix = makePerspective((fov * M_PI) / 180.0f, aspectRatio, near, far);
 
   /* auto v = */
   /*     GLKMatrix4MakeLookAt(position.x, position.y, position.z, lookAt.x, */

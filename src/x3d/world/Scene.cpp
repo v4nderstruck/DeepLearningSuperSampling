@@ -1,4 +1,5 @@
 #include "Scene.hpp"
+#include <simd/matrix.h>
 #include <simd/matrix_types.h>
 #include <simd/simd.h>
 
@@ -10,18 +11,14 @@ Scene::Scene() : root("root"), perspectiveCamera(), clearColor(0.0, 0.0, 0.0, 1.
                       simd::quatf(0.0, simd::make_float3(1.0, 0.0, 0.0)));
 
   perspectiveCamera.setInternals(simd::make_float3(0.0f, 0.0f, 7.0f), 
-                                 simd::make_float3(0.0f, 0.0f, -1.0f), 
+                                 simd::make_float3(0.0f, 0.0f, 0.0f), 
                                  simd::make_float3(0.0f, 1.0f, 0.0f),
-                                 90.0 ,1512.0/920.0, 0.01, 500.0);
+                                 90.0f ,1512.0f/920.0f, 0.01f, 100.0f);
   perspectiveCamera.buildCamera();
 }
 
 void Scene::renderScene(MTL::RenderCommandEncoder* encoder) {
-  simd::float4x4 identity = simd::float4x4();
-  identity.columns[0] = simd::make_float4(1, 0, 0, 0);
-  identity.columns[1] = simd::make_float4(0, 1, 0, 0);
-  identity.columns[2] = simd::make_float4(0, 0, 1, 0);
-  identity.columns[3] = simd::make_float4(0, 0, 0, 1);
+  simd::float4x4 identity = matrix_identity_float4x4;
   root.render(encoder, identity);
 }
 

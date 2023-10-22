@@ -15,8 +15,8 @@ public:
 
   void buildCamera();
 
-  simd::float4x4 projectionMatrix;
-  simd::float4x4 viewMatrix;
+  simd_float4x4 projectionMatrix;
+  simd_float4x4 viewMatrix;
 private:
   simd::float3 position;
   simd::float3 lookAt;

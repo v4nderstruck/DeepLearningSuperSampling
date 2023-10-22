@@ -9,10 +9,10 @@ simd::float4x4 makePerspective(float fovRadians, float aspect, float znear,
   using simd::float4;
   float ys = 1.f / tanf(fovRadians * 0.5f);
   float xs = ys / aspect;
-  float zs = zfar / (znear - zfar);
-  return simd_matrix_from_rows(
+  float zs = zfar / (zfar - znear);
+  return simd_matrix(
       (float4){xs, 0.0f, 0.0f, 0.0f}, (float4){0.0f, ys, 0.0f, 0.0f},
-      (float4){0.0f, 0.0f, zs, znear * zs}, (float4){0, 0, -1, 0});
+      (float4){0.0f, 0.0f, zs, 1.0f}, (float4){0, 0, -znear * zs, 0});
 }
 
 simd::float4x4 makeLookAt(simd::float3 &eye, simd::float3 &center,
@@ -22,7 +22,7 @@ simd::float4x4 makeLookAt(simd::float3 &eye, simd::float3 &center,
   simd::float3 xAxis = simd_normalize(simd_cross(up, zAxis));
   simd::float3 yAxis = simd_cross(zAxis, xAxis);
 
-  return simd_matrix_from_rows(
+  return simd_matrix(
     (float4) {xAxis.x, yAxis.x, zAxis.x, 0.0},
     (float4) {xAxis.y, yAxis.y, zAxis.y, 0.0},
     (float4) {xAxis.z, yAxis.z, zAxis.z, 0.0},
