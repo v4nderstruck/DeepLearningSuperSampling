@@ -37,7 +37,7 @@ void render_loop(x3d::AppDelegate *d) {
             << std::endl;
   long c = 1;
   while (1) {
-    actual_cube->rotate((5.0 * c * M_PI) /180.0, simd::make_float3(1.0f, 0.0f, 0.0f));
+    actual_cube->rotate((2.0 * c * M_PI) /180.0, simd::make_float3(1.0f, 0.0f, 0.0f));
     d->draw();
     std::this_thread::sleep_for(std::chrono::milliseconds(1000 / FPS));
     c++;
