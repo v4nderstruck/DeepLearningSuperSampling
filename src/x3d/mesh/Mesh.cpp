@@ -44,9 +44,8 @@ MTL::Library *Mesh::BuildShaders(MTL::Device *device) {
     uint vertexId [[vertex_id]]
   ) {
     VertexOut out;
-    float4 pos = float4(vertex_array[vertexId].position, 1.0);
-    float4x4 mvp = uniforms.projectionMatrix * model_uniforms.modelMatrix;
-    pos = mvp * pos;
+    float4 pos = model_uniforms.modelMatrix  * float4(vertex_array[vertexId].position, 1.0);
+    pos = uniforms.projectionMatrix * pos;
     out.position = pos; 
     out.color = vertex_array[vertexId].color;
     out.tex = vertex_array[vertexId].textureCoordinate;

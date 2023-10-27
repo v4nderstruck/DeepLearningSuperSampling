@@ -30,6 +30,8 @@ public:
   void setTranslation(simd::float3 &&position, simd::float3 &&scale,
                       simd::quatf &&rotation);
 
+  void rotate(float angle, simd::float3 &&axis);
+
   void render(MTL::RenderCommandEncoder *encoder,
               simd::float4x4 &parentTransform);
 
@@ -52,6 +54,7 @@ public:
   std::string name;
 
   std::vector<std::unique_ptr<Node>> children;
+
 private:
   Node *parent;
   std::function<void(Node *, int)> update;

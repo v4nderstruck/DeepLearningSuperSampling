@@ -89,7 +89,7 @@ void Renderer::drawInMTKView(MTK::View *pView) {
   pEnc->setDepthStencilState(pDepthStencilState.get());
   pEnc->setVertexBuffer(uniformBuffer, 0, ArgumentBufferIndex::UNIFORMS);
   pEnc->setFragmentBuffer(uniformBuffer, 0, ArgumentBufferIndex::UNIFORMS);
-  pEnc->setCullMode(MTL::CullModeBack);
+  //pEnc->setCullMode(MTL::CullModeBack);
 
   scene.renderScene(pEnc);
   pEnc->endEncoding();

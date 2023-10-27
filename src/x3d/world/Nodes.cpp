@@ -13,6 +13,10 @@ void Node::setTranslation(simd::float3 &&position, simd::float3 &&scale,
   this->rotation = std::move(rotation);
 }
 
+void Node::rotate(float angle, simd::float3 &&axis) {
+  rotation = simd::quatf(angle, std::move(axis));
+}
+
 void Node::render(MTL::RenderCommandEncoder *encoder,
                   simd::float4x4 &parentTransform) {
   auto posTransform = simd::float4x4();
@@ -22,8 +26,7 @@ void Node::render(MTL::RenderCommandEncoder *encoder,
   posTransform.columns[2] = simd::make_float4(0, 0, 1, 0);
   posTransform.columns[3] = simd::make_float4(position, 1);
 
-  auto rotTransform = simd::quatf(0.0, simd::make_float3(1.0, 0.0, 0.0));
-  posTransform = matrix_identity_float4x4;
+  posTransform = parentTransform * rotation * posTransform;
 
   if (mesh) {
     encoder->setVertexBytes(&posTransform, sizeof(simd::float4x4),
